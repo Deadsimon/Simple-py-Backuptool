@@ -51,9 +51,21 @@ def backup_job(folder_path, output_folder):
 
 def schedule_next_job(folder_path, output_folder, schedule_length):
     schedule.clear()
-    schedule.every().interval(schedule_length).do(
-        backup_job, folder_path=folder_path, output_folder=output_folder
-    )
+
+    if schedule_length == 'minute':
+        schedule.every().minute.do(
+            backup_job, folder_path=folder_path, output_folder=output_folder
+        )
+    elif schedule_length == 'hour':
+        schedule.every().hour.do(
+            backup_job, folder_path=folder_path, output_folder=output_folder
+        )
+    elif schedule_length == 'day':
+        schedule.every().day.do(
+            backup_job, folder_path=folder_path, output_folder=output_folder
+        )
+    else:
+        raise ValueError(f"Invalid schedule length: {schedule_length}")
 
 
 def read_config(file_path):
@@ -65,16 +77,14 @@ def read_config(file_path):
 # Read the configuration from the YAML file
 config = read_config('config.yml')
 output_folder = config['output_folder']
-backup_folder = config['backup_folder']
+backup_folder_path = config['backup_folder']
 schedule_length = config['schedule_length']
 
 # Usage example
-folder_path = os.path.expandvars(backup_folder)
+folder_path = os.path.expandvars(backup_folder_path)
 
 # Schedule the initial backup job
-schedule.every().interval(schedule_length).do(
-    backup_job, folder_path=folder_path, output_folder=output_folder
-)
+schedule_next_job(folder_path, output_folder, schedule_length)
 
 print("Backup job is scheduled. Press ESC to stop the application.")
 
@@ -84,7 +94,7 @@ while True:
     print(f"Next backup scheduled at: {next_run_formatted}")
 
     schedule.run_pending()
-    time.sleep(5)
+    time.sleep(1)
     if keyboard.is_pressed('esc'):
         print("Application stopped.")
         break
