@@ -1,0 +1,3 @@
+output_folder: 'D:\7days-ds backup'
+backup_folder: 'C:\Users\plex\AppData\Roaming\7DaysToDie\Saves\Navezgane'
+schedule_length: 'hour'
