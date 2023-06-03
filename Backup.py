@@ -44,9 +44,9 @@ def backup_folder(folder_path, output_folder):
         shutil.rmtree(temp_folder)
 
 
-def backup_job(folder_path, output_folder):
+def backup_job(folder_path, output_folder, schedule_length):
     backup_folder(folder_path, output_folder)
-    schedule_next_job(folder_path, output_folder)
+    schedule_next_job(folder_path, output_folder, schedule_length)
 
 
 def schedule_next_job(folder_path, output_folder, schedule_length):
@@ -54,15 +54,15 @@ def schedule_next_job(folder_path, output_folder, schedule_length):
 
     if schedule_length == 'minute':
         schedule.every().minute.do(
-            backup_job, folder_path=folder_path, output_folder=output_folder
+            backup_job, folder_path=folder_path, output_folder=output_folder, schedule_length=schedule_length
         )
     elif schedule_length == 'hour':
         schedule.every().hour.do(
-            backup_job, folder_path=folder_path, output_folder=output_folder
+            backup_job, folder_path=folder_path, output_folder=output_folder, schedule_length=schedule_length
         )
     elif schedule_length == 'day':
         schedule.every().day.do(
-            backup_job, folder_path=folder_path, output_folder=output_folder
+            backup_job, folder_path=folder_path, output_folder=output_folder, schedule_length=schedule_length
         )
     else:
         raise ValueError(f"Invalid schedule length: {schedule_length}")
