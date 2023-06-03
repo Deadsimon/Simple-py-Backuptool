@@ -84,7 +84,7 @@ while True:
     print(f"Next backup scheduled at: {next_run_formatted}")
 
     schedule.run_pending()
-    time.sleep(1)
+    time.sleep(5)
     if keyboard.is_pressed('esc'):
         print("Application stopped.")
         break
