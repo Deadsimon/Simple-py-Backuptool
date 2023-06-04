@@ -65,16 +65,16 @@ def check_outstanding_backups():
     if pending_backups:
         print(f'{len(pending_backups)} outstanding backup(s) found.')
 
-        # Perform the backup immediately for the first pending backup
-        first_pending_backup = pending_backups[0]
-        scheduled_time_str = first_pending_backup[0]  # Get the scheduled time as string
+    for backup in pending_backups:
+        scheduled_time_str = backup[0]  # Get the scheduled time as string
         scheduled_time_str = scheduled_time_str.split('.')[0]  # Remove microseconds from the string
         scheduled_time = datetime.datetime.strptime(scheduled_time_str, "%Y-%m-%d %H:%M:%S")  # Convert to datetime object
-        print(f'Performing backup immediately for scheduled backup at {scheduled_time}.')
-        update_backup_status(scheduled_time_str, f'InProgress_{datetime.datetime.now()}')
-        backup_job(config['folder_path'], config['output_folder'], scheduled_time_str)
+        print(f'Scheduled backup at {scheduled_time} is overdue. Marking as Failed.')
+        update_backup_status(scheduled_time_str, f'Failed_{datetime.datetime.now()}')
 
     conn.close()
+
+
 
 
 def backup_folder(folder_path, output_folder):
