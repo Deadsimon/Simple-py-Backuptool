@@ -7,9 +7,10 @@ import schedule
 import time
 from threading import Thread
 
+db_file_path = r"C:\Program Files\Deadsimon - Github\Simple-py-backer-upper\backup_status.db"
 
 def initialize_database():
-    conn = sqlite3.connect('backup_status.db')
+    conn = sqlite3.connect(db_file_path)
     c = conn.cursor()
 
     # Create the table if it doesn't exist
@@ -21,7 +22,7 @@ def initialize_database():
 
 
 def update_backup_status(scheduled_time, status):
-    conn = sqlite3.connect('backup_status.db')
+    conn = sqlite3.connect(db_file_path)
     cursor = conn.cursor()
 
     # Check if the scheduled_time exists in the database
@@ -48,9 +49,8 @@ def update_backup_status(scheduled_time, status):
     conn.close()
 
 
-
 def check_outstanding_backups():
-    conn = sqlite3.connect('backup_status.db')
+    conn = sqlite3.connect(db_file_path)
     c = conn.cursor()
 
     # Get the current time
@@ -120,7 +120,7 @@ def backup_folder(folder_path, output_folder):
 
 def backup_job(folder_path, output_folder, scheduled_time_str):
     # Establish a connection and create a cursor
-    conn = sqlite3.connect('backup_status.db')
+    conn = sqlite3.connect(db_file_path)
     c = conn.cursor()
 
     # Perform the backup process
@@ -177,16 +177,18 @@ def schedule_next_job(folder_path, output_folder, sch_length_unit, sch_length_am
 
 def cleanup():
     # Cleanup function to ensure pending changes are committed to the database
-    conn = sqlite3.connect('backup_status.db')
+    conn = sqlite3.connect(db_file_path)
     conn.commit()
     conn.close()
 
 
 if __name__ == "__main__":
     # Read the configuration from config.yml
+    config_file_path = r"C:\Program Files\Deadsimon - Github\Simple-py-backer-upper\config.yml"
+
     import yaml
 
-    with open('config.yml', 'r') as file:
+    with open(config_file_path, 'r') as file:
         config = yaml.safe_load(file)
 
     # Remove the following lines to resolve the shadowing issue

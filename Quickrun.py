@@ -2,19 +2,12 @@ import os
 import shutil
 import zipfile
 import yaml
-import random
-import string
 from datetime import datetime
-
-def generate_random_string(length):
-    """Generate a random string of specified length."""
-    letters = string.ascii_letters + string.digits
-    return ''.join(random.choice(letters) for _ in range(length))
 
 def generate_unique_temp_directory(output_folder):
     """Generate a unique temporary directory name."""
     while True:
-        temp_directory_name = f"_temp_{generate_random_string(6)}"
+        temp_directory_name = f"_temp_{datetime.now().strftime('%Y%m%d%H%M%S')}"
         temp_directory = os.path.join(output_folder, temp_directory_name)
         if not os.path.exists(temp_directory):
             return temp_directory
@@ -25,7 +18,7 @@ def backup_directory(folder_path, output_folder):
 
     # Create a zip file with the name of the source directory and timestamp
     base_folder_name = os.path.basename(folder_path)
-    zip_file_name = f"{base_folder_name}_{timestamp}_QR.zip"
+    zip_file_name = f"{base_folder_name}_{timestamp}.zip"
     zip_file_path = os.path.join(output_folder, zip_file_name)
 
     # Create a unique temporary directory to store the files before zipping
@@ -55,8 +48,11 @@ def backup_directory(folder_path, output_folder):
         shutil.rmtree(temp_directory)
 
 if __name__ == "__main__":
+    # Specify the absolute file path to the config.yml file
+    config_file_path = "C:\\Program Files\\Deadsimon - Github\\Simple-py-backer-upper\config.yml"
+
     # Read the configuration from the YAML file
-    with open("config.yml", "r") as config_file:
+    with open(config_file_path, "r") as config_file:
         config = yaml.safe_load(config_file)
 
     folder_path = os.path.expanduser(config["folder_path"])  # Use os.path.expanduser to handle Windows paths
